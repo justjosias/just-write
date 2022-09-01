@@ -1,0 +1,38 @@
+body, html {
+	font-size: 1.2em;
+}
+
+#wrapper {
+	max-width: 1000px;
+	margin: auto;
+	width: 90%;
+	margin-top: 10%;
+}
+
+h1 {
+	text-align: center;
+}
+
+select, button {
+	font-size: 1em;
+	color: black;
+	/*text-align: center;
+	display: block;*/
+	/*margin: auto;*/
+}
+
+textarea {
+	font-size: 1.15em;
+	display: block;
+	width: 100%;
+	margin: auto;
+	height: 300px;
+
+	border-color: blue;
+	border-width: 3px;
+	border-radius: 5px;
+}
+
+#status {
+	color: green;
+}

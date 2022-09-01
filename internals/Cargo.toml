@@ -1,0 +1,15 @@
+[package]
+name = "jw-internals"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.22"
+directories = "4.0.1"
+serde = "1.0.144"
+serde_derive = "1.0.144"
+shellexpand = "2.1.2"
+thiserror = "1.0.32"
+toml = "0.5.9"
