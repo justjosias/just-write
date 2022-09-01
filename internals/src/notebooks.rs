@@ -114,8 +114,10 @@ impl Notebook {
         let month = format!("{:02}", dt.month);
         let day = format!("{:02}", dt.day);
 
+        let config = self.read_config()?;
+
         let path = PathBuf::from(
-            self.read_config()?
+            config
                 .post_path
                 .replace("%Y", &year)
                 .replace("%m", &month)
@@ -158,7 +160,9 @@ impl Notebook {
             .append(true)
             .open(&full_path)?;
 
-        f.write_all(metadata.as_bytes())?;
+        if config.metadata {
+            f.write_all(metadata.as_bytes())?;
+        }
         f.write_all(text.as_bytes())?;
 
         Ok(full_path)
