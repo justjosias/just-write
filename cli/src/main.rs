@@ -209,6 +209,7 @@ fn open_editor(path: std::path::PathBuf) -> Result<String, std::path::PathBuf> {
     }
 
     if let Ok(s) = std::fs::read_to_string(&path) {
+        let _ = std::fs::remove_file(&path);
         Ok(s)
     } else {
         Err(path)
