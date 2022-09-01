@@ -1,11 +1,14 @@
 use jw_internals::{notebooks, Error, Notebook};
 
-use std::process::ExitCode;
+use std::{
+    env, fs, path,
+    process::{self, ExitCode},
+};
 
 use rand::Rng;
 
 fn main() -> ExitCode {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    let args: Vec<String> = env::args().skip(1).collect();
 
     if args.is_empty() {
         eprintln!("Usage: jw [subcommand]");
@@ -194,22 +197,22 @@ fn open_error(id: &str) {
     );
 }
 
-fn get_text() -> Result<String, std::path::PathBuf> {
-    let mut path = std::env::temp_dir();
+fn get_text() -> Result<String, path::PathBuf> {
+    let mut path = env::temp_dir();
     path.push("jw-".to_owned() + &random_string(10));
     open_editor(path)
 }
 
-fn open_editor(path: std::path::PathBuf) -> Result<String, std::path::PathBuf> {
-    let editor = std::env::var("EDITOR").unwrap_or_else(|_| "vi".to_owned());
+fn open_editor(path: path::PathBuf) -> Result<String, path::PathBuf> {
+    let editor = env::var("EDITOR").unwrap_or_else(|_| "vi".to_owned());
 
-    if let Err(_) = std::process::Command::new(editor).arg(&path).status() {
+    if let Err(_) = process::Command::new(editor).arg(&path).status() {
         eprintln!("Failed to find editor. Set EDITOR or install vi to resolve.");
         return Err(path);
     }
 
-    if let Ok(s) = std::fs::read_to_string(&path) {
-        let _ = std::fs::remove_file(&path);
+    if let Ok(s) = fs::read_to_string(&path) {
+        let _ = fs::remove_file(&path);
         Ok(s)
     } else {
         Err(path)
