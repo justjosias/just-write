@@ -91,7 +91,7 @@ A micro-journaling tool
             }
         }
 
-        "list" => match notebooks::list_notebooks() {
+        "list" => match notebooks::list() {
             Ok(notebooks) => {
                 for notebook in notebooks {
                     println!("{}", notebook.id);

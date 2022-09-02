@@ -6,7 +6,7 @@ use std::{
 
 use serde_derive::{Deserialize, Serialize};
 
-use crate::{config::get_config, search, time::Timestamp, Error};
+use crate::{config, search, time::Timestamp, Error};
 
 #[derive(Default, Deserialize, Serialize)]
 struct Config {
@@ -38,7 +38,7 @@ impl Notebook {
 
     /// Loads the notebook from the root directory
     pub fn load(id: &str) -> Option<Self> {
-        if let Ok(config) = get_config() {
+        if let Ok(config) = config::get() {
             Self::load_from_path(&config.root.join(id))
         } else {
             None
@@ -47,7 +47,7 @@ impl Notebook {
 
     /// Generates a new notebook. Fails if notebook alrady exists.
     pub fn generate(id: &str) -> Result<Notebook, Error> {
-        let root = get_config()?.root;
+        let root = config::get()?.root;
 
         let path = root.join(id);
         if path.exists() {
@@ -195,8 +195,8 @@ impl Notebook {
     }
 }
 
-pub fn list_notebooks() -> Result<Vec<Notebook>, Error> {
-    let root = get_config()?.root;
+pub fn list() -> Result<Vec<Notebook>, Error> {
+    let root = config::get()?.root;
     let dir = fs::read_dir(root)?;
 
     let notebooks = dir

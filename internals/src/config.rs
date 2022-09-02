@@ -33,10 +33,10 @@ impl Config {
 }
 
 /// Returns the configuration, initializing it if not existent
-pub fn get_config() -> Result<Config, Error> {
+pub fn get() -> Result<Config, Error> {
     let default_config = "";
 
-    let config_path = get_config_path(Some("config.toml"))?;
+    let config_path = get_path(Some("config.toml"))?;
     if !config_path.exists() {
         fs::write(&config_path, default_config.as_bytes())?;
     }
@@ -47,7 +47,7 @@ pub fn get_config() -> Result<Config, Error> {
 
 /// Returns the configuration directory based on directories-rs with an optional subpath.
 /// Creates the configuration directory if it doesn't exist. Does not create subpath.
-pub fn get_config_path(subpath: Option<&str>) -> Result<PathBuf, Error> {
+pub fn get_path(subpath: Option<&str>) -> Result<PathBuf, Error> {
     let dirs = match directories::ProjectDirs::from("dev", "Just Josias", "Just Write") {
         Some(dirs) => dirs,
         None => {
