@@ -54,7 +54,7 @@ A micro-journaling tool
                 Ok(_) => {}
                 Err(e) => match e {
                     Error::Exists => {
-                        eprintln!("jw: notebook {id} already exists")
+                        eprintln!("jw: notebook {id} already exists");
                     }
                     _ => {
                         eprintln!("Error: {}", e);
@@ -72,7 +72,7 @@ A micro-journaling tool
 
             if let Some(notebook) = notebook {
                 match get_text() {
-                    Ok(text) => match notebook.post(text) {
+                    Ok(text) => match notebook.post(&text) {
                         Ok(path) => {
                             println!("Wrote post to {:?}", path);
                         }

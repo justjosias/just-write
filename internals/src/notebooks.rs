@@ -82,7 +82,7 @@ impl Notebook {
         Ok(())
     }
 
-    pub fn post(&self, text: String) -> Result<PathBuf, Error> {
+    pub fn post(&self, text: &str) -> Result<PathBuf, Error> {
         let mut first_text = String::new();
         for (i, ch) in text.chars().enumerate() {
             first_text.push(ch);
