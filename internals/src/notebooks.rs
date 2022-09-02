@@ -52,9 +52,8 @@ impl Notebook {
         let path = root.join(id);
         if path.exists() {
             return Err(Error::Exists);
-        } else {
-            fs::create_dir_all(&path)?;
         }
+        fs::create_dir_all(&path)?;
 
         let config = Config {
             name: id.to_string(),

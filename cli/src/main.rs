@@ -23,7 +23,7 @@ fn main() -> ExitCode {
 
     match args[0].as_str() {
         "version" => {
-            println!("jw {}", env!("CARGO_PKG_VERSION"))
+            println!("jw {}", env!("CARGO_PKG_VERSION"));
         }
         "help" => {
             println!(
@@ -52,15 +52,14 @@ A micro-journaling tool
             let id = &args[1];
             match Notebook::generate(id) {
                 Ok(_) => {}
-                Err(e) => match e {
-                    Error::Exists => {
+                Err(e) => {
+                    if let Error::Exists = e {
                         eprintln!("jw: notebook {id} already exists");
-                    }
-                    _ => {
-                        eprintln!("Error: {}", e);
                         return ExitCode::FAILURE;
                     }
-                },
+                    eprintln!("Error: {}", e);
+                    return ExitCode::FAILURE;
+                }
             };
         }
 

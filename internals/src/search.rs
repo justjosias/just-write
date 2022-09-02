@@ -20,7 +20,7 @@ pub fn search_files(paths: &[PathBuf], query: &str) -> Vec<PathBuf> {
     for path in paths {
         if let Ok(contents) = read_to_string(&path) {
             if contents.contains(query) {
-                new_paths.push(path.to_owned());
+                new_paths.push(path.clone());
             }
         }
     }
