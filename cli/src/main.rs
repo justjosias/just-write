@@ -156,13 +156,11 @@ A micro-journaling tool
 
                 let num = if args.len() < 3 {
                     0
+                } else if let Ok(num) = args[2].parse::<usize>() {
+                    num
                 } else {
-                    if let Ok(num) = args[2].parse::<usize>() {
-                        num
-                    } else {
-                        eprintln!("Error: index must be a number");
-                        return ExitCode::FAILURE;
-                    }
+                    eprintln!("Error: index must be a number");
+                    return ExitCode::FAILURE;
                 };
 
                 if let Some(path) = posts.iter().rev().nth(num) {
@@ -206,7 +204,7 @@ fn get_text() -> Result<String, path::PathBuf> {
 fn open_editor(path: path::PathBuf) -> Result<String, path::PathBuf> {
     let editor = env::var("EDITOR").unwrap_or_else(|_| "vi".to_owned());
 
-    if let Err(_) = process::Command::new(editor).arg(&path).status() {
+    if process::Command::new(editor).arg(&path).status().is_err() {
         eprintln!("Failed to find editor. Set EDITOR or install vi to resolve.");
         return Err(path);
     }

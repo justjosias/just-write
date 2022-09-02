@@ -33,26 +33,22 @@ pub fn tags(paths: &[PathBuf]) -> Tags {
     let mut tags = HashMap::new();
     for path in paths {
         if let Ok(f) = File::open(path) {
-            for line in BufReader::new(f).lines() {
-                if let Ok(line) = line {
-                    let mut line = line;
-                    line.push('\n');
-                    let mut in_tag = false;
-                    let mut tag = String::new();
-                    for c in line.chars() {
-                        if in_tag {
-                            if c == ' ' || c.is_ascii_punctuation() || c == '\n' {
-                                in_tag = false;
-                                tags.entry(tag.clone()).and_modify(|t| *t += 1).or_insert(1);
-                                tag.clear();
-                            } else {
-                                tag.push(c);
-                            }
+            for line in BufReader::new(f).lines().flatten() {
+                let mut line = line;
+                line.push('\n');
+                let mut in_tag = false;
+                let mut tag = String::new();
+                for c in line.chars() {
+                    if in_tag {
+                        if c == ' ' || c.is_ascii_punctuation() || c == '\n' {
+                            in_tag = false;
+                            tags.entry(tag.clone()).and_modify(|t| *t += 1).or_insert(1);
+                            tag.clear();
                         } else {
-                            if c == '#' {
-                                in_tag = true;
-                            }
+                            tag.push(c);
                         }
+                    } else if c == '#' {
+                        in_tag = true;
                     }
                 }
             }

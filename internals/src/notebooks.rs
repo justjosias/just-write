@@ -172,10 +172,8 @@ impl Notebook {
         let f = fs::File::open(self.path.join("posts.txt"))?;
         let reader = std::io::BufReader::new(f);
         let mut posts = Vec::new();
-        for line in reader.lines() {
-            if let Ok(line) = line {
-                posts.push(PathBuf::from(line));
-            }
+        for line in reader.lines().flatten() {
+            posts.push(PathBuf::from(line));
         }
 
         Ok(posts)
