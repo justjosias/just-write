@@ -3,6 +3,5 @@
 members = [
     "cli",
     "internals",
-    "gui/src-tauri",
 ]
 
