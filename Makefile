@@ -12,7 +12,7 @@ cli-build:
 
 cli-install: cli-build
 	$(INSTALL) -d $(PREFIX)/bin
-	$(INSTALL) -m755 $(CLI_PATH)/target/release/$(NAME) $(PREFIX)/bin
+	$(INSTALL) -m755 target/release/$(NAME) $(PREFIX)/bin
 	
 	$(INSTALL) -d $(PREFIX)/share/bash-completion/completions/
 	$(INSTALL) -m755 $(CLI_PATH)/$(NAME).bash-completion $(PREFIX)/share/bash-completion/completions/$(NAME)
