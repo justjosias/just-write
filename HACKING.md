@@ -11,11 +11,9 @@ The GUI is under massive construction at the moment, so you probably want to wor
 
 ## CLI
 
-To avoid building the GUI when working on the CLI, be sure to run `cargo build` from the individual crate instead of the repository's root directory.
+Building the CLI in particular (without compiling the GUI), can be done with `cargo build --path cli` or `make cli-build`.
 
-Otherwise, it is a standard Rust project. Building, installing, and debugging are normal.
-
-Installation of the CLI can be done with `cargo install --path cli` or with the `Makefile`, which also installs Bash completions.
+Installation of the CLI can be done with `cargo install --path cli` or with `make cli-install`, which also installs Bash completions.
 
 ## GUI
 
