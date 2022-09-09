@@ -203,7 +203,16 @@ fn get_text() -> Result<String, path::PathBuf> {
 fn open_editor(path: path::PathBuf) -> Result<String, path::PathBuf> {
     let editor = env::var("EDITOR").unwrap_or_else(|_| "vi".to_owned());
 
-    if process::Command::new(editor).arg(&path).status().is_err() {
+    let mut split = editor.split_whitespace();
+    let editor = split.next().unwrap();
+    let args: Vec<&str> = split.collect();
+
+    if process::Command::new(editor)
+        .args(&args)
+        .arg(&path)
+        .status()
+        .is_err()
+    {
         eprintln!("Failed to find editor. Set EDITOR or install vi to resolve.");
         return Err(path);
     }
