@@ -15,8 +15,8 @@ fn main() -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    let notebook = if args.len() > 1 {
-        Notebook::load(&args[1])
+    let notebook = if let Some(id) = args.get(1) {
+        Notebook::load(id)
     } else {
         None
     };
