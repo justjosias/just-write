@@ -218,7 +218,7 @@ fn open_editor(path: path::PathBuf) -> Result<String, path::PathBuf> {
     }
 
     if let Ok(s) = fs::read_to_string(&path) {
-        let _ = fs::remove_file(&path);
+        _ = fs::remove_file(&path);
         Ok(s)
     } else {
         Err(path)
