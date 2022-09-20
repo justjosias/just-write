@@ -1387,8 +1387,8 @@ dependencies = [
 name = "jw"
 version = "0.1.0"
 dependencies = [
+ "fastrand",
  "jw-internals",
- "rand 0.8.5",
  "shellexpand",
 ]
 
