@@ -15,7 +15,7 @@ mod utils;
 fn save_post(notebook: &str, contents: &str) -> bool {
     println!("Sending: {}", &contents);
     let notebook = Notebook::load(notebook).unwrap();
-    if let Ok(_) = notebook.post(contents.to_string()) {
+    if notebook.post(contents).is_ok() {
         true
     } else {
         false
@@ -24,7 +24,7 @@ fn save_post(notebook: &str, contents: &str) -> bool {
 
 #[tauri::command]
 fn notebook_list() -> Vec<String> {
-    let notebooks: Vec<String> = notebooks::list_notebooks()
+    let notebooks: Vec<String> = notebooks::list()
         .unwrap_or_else(|_| Vec::new())
         .iter()
         .map(|n| n.id.clone())
@@ -54,7 +54,7 @@ struct State {
 
 #[tauri::command]
 fn save_state(text: &str, notebook: &str) -> bool {
-    let path = config::get_config_path(Some("gui.toml")).unwrap();
+    let path = config::get_path(Some("gui.toml")).unwrap();
 
     let state = State {
         text: Some(text.to_owned()),
@@ -77,7 +77,7 @@ fn save_state(text: &str, notebook: &str) -> bool {
 
 #[tauri::command]
 fn load_state() -> State {
-    let path = config::get_config_path(Some("gui.toml")).unwrap();
+    let path = config::get_path(Some("gui.toml")).unwrap();
     let conf_str = fs::read_to_string(path).unwrap_or("".to_string());
     let config = toml::from_str(&conf_str).unwrap();
 
