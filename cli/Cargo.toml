@@ -6,6 +6,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+fastrand = "1.8.0"
 jw-internals = { version = "0.1.0", path = "../internals" }
-rand = "0.8.5"
 shellexpand = "2.1.2"

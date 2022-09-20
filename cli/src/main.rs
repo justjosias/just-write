@@ -5,8 +5,6 @@ use std::{
     process::{self, ExitCode},
 };
 
-use rand::Rng;
-
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
 
@@ -230,14 +228,5 @@ fn open_editor(path: &path::Path) -> Result<String, path::PathBuf> {
 }
 
 fn random_string(len: usize) -> String {
-    // from https://github.com/HKarimiA/rust-generate-random-string
-    const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-                            abcdefghijklmnopqrstuvwxyz";
-    let mut rng = rand::thread_rng();
-    (0..len)
-        .map(|_| {
-            let i = rng.gen_range(0..CHARS.len());
-            CHARS[i] as char
-        })
-        .collect()
+    (0..len).map(|_| fastrand::alphabetic()).collect()
 }
