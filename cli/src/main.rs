@@ -163,7 +163,7 @@ A micro-journaling tool
                 };
 
                 if let Some(path) = posts.iter().rev().nth(num) {
-                    match open_editor(notebook.path.join(path)) {
+                    match open_editor(&notebook.path.join(path)) {
                         Ok(_) => {}
                         Err(p) => {
                             eprintln!("Failed to open file: {}", p.display());
@@ -197,10 +197,15 @@ fn open_error(id: &str) {
 fn get_text() -> Result<String, path::PathBuf> {
     let mut path = env::temp_dir();
     path.push("jw-".to_owned() + &random_string(10));
-    open_editor(path)
+    if let Ok(s) = open_editor(&path) {
+        _ = fs::remove_file(&path);
+        Ok(s)
+    } else {
+        Err(path)
+    }
 }
 
-fn open_editor(path: path::PathBuf) -> Result<String, path::PathBuf> {
+fn open_editor(path: &path::Path) -> Result<String, path::PathBuf> {
     let editor = env::var("EDITOR").unwrap_or_else(|_| "vi".to_owned());
 
     let mut split = editor.split_whitespace();
@@ -214,14 +219,13 @@ fn open_editor(path: path::PathBuf) -> Result<String, path::PathBuf> {
         .is_err()
     {
         eprintln!("Failed to find editor. Set EDITOR or install vi to resolve.");
-        return Err(path);
+        return Err(path.to_owned());
     }
 
     if let Ok(s) = fs::read_to_string(&path) {
-        _ = fs::remove_file(&path);
         Ok(s)
     } else {
-        Err(path)
+        Err(path.to_owned())
     }
 }
 
