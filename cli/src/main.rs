@@ -5,6 +5,8 @@ use std::{
     process::{self, ExitCode},
 };
 
+const DEFAULT_EDITOR: &'static str = "vi";
+
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
 
@@ -204,7 +206,7 @@ fn get_text() -> Result<String, path::PathBuf> {
 }
 
 fn open_editor(path: &path::Path) -> Result<String, path::PathBuf> {
-    let editor = env::var("EDITOR").unwrap_or_else(|_| "vi".to_owned());
+    let editor = env::var("EDITOR").unwrap_or(DEFAULT_EDITOR.into());
 
     let mut split = editor.split_whitespace();
     let editor = split.next().unwrap();
@@ -216,7 +218,10 @@ fn open_editor(path: &path::Path) -> Result<String, path::PathBuf> {
         .status()
         .is_err()
     {
-        eprintln!("Failed to find editor. Set EDITOR or install vi to resolve.");
+        eprintln!(
+            "Failed to find editor. Set EDITOR or install {} to resolve.",
+            DEFAULT_EDITOR
+        );
         return Err(path.to_owned());
     }
 
