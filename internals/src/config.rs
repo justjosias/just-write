@@ -4,8 +4,8 @@
 //! `config_dir`, as provided by `directories-rs`.
 //!
 //! Example `config.toml`:
-//! ```
-//! root: ~/jw/
+//! ```toml
+//! root = "~/jw/"
 //! ```
 
 use std::{
@@ -17,19 +17,41 @@ use serde_derive::{Deserialize, Serialize};
 
 use crate::Error;
 
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct Config {
     /// The directory where notebooks are stored
     pub root: PathBuf,
 }
 
+#[derive(Debug, Default, Deserialize, Serialize)]
+struct TempConfig {
+    root: String,
+}
+
 impl Config {
-    pub fn load<P: AsRef<Path> + std::fmt::Debug>(path: P) -> Result<Self, Error> {
-        let config_str = fs::read_to_string(path)?;
-        let mut config: Config = toml::from_str(config_str.as_str())?;
-        config.root = PathBuf::from(expand_tilde(config.root));
-        Ok(config)
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
+        Self::from_str(&fs::read_to_string(path)?)
     }
+
+    fn from_str(s: &str) -> Result<Self, Error> {
+        let config: TempConfig = toml::from_str(s)?;
+        let root = shellexpand::tilde(&config.root).into_owned();
+        Ok(Config {
+            root: PathBuf::from(root),
+        })
+    }
+}
+
+#[test]
+fn load_from_str() {
+    let s = r#"root = "~/our/nice/directory""#;
+    let home = std::env::var("HOME").unwrap();
+    assert_eq!(
+        Config::from_str(s).unwrap(),
+        Config {
+            root: PathBuf::from(format!("{home}/our/nice/directory")),
+        }
+    );
 }
 
 /// Returns the configuration, initializing it if not existent
@@ -63,10 +85,4 @@ pub fn get_path(subpath: Option<&str>) -> Result<PathBuf, Error> {
         path.push(p);
     }
     Ok(path)
-}
-
-/// A helper function for expanding a tilde.
-/// Assumes the path is a valid UTF-8 string and will panic otherwise.
-fn expand_tilde(path: PathBuf) -> String {
-    shellexpand::tilde(&path.into_os_string().into_string().unwrap()).into_owned()
 }
