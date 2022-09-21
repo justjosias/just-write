@@ -5,7 +5,7 @@ use std::{
     process::{self, ExitCode},
 };
 
-const DEFAULT_EDITOR: &'static str = "vi";
+const DEFAULT_EDITOR: &str = "vi";
 
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
