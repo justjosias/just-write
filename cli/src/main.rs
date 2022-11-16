@@ -71,13 +71,19 @@ A micro-journaling tool
 
             if let Some(notebook) = notebook {
                 match get_text() {
-                    Ok(text) => match notebook.post(&text) {
-                        Ok(path) => {
-                            println!("Wrote post to {:?}", path);
-                        }
-                        Err(e) => {
-                            eprintln!("Error writing post: {}", e);
-                            return ExitCode::FAILURE;
+                    Ok(text) => {
+                        if !text.is_empty() {
+                            match notebook.post(&text) {
+                                Ok(path) => {
+                                    println!("Wrote post to {:?}", path);
+                                }
+                                Err(e) => {
+                                    eprintln!("Error writing post: {}", e);
+                                    return ExitCode::FAILURE;
+                                }
+                            }
+                        } else {
+                            eprintln!("Post empty; not saved.");
                         }
                     },
                     Err(p) => {
@@ -206,7 +212,7 @@ fn get_text() -> Result<String, path::PathBuf> {
 }
 
 fn open_editor(path: &path::Path) -> Result<String, path::PathBuf> {
-    let editor = env::var("EDITOR").unwrap_or(DEFAULT_EDITOR.into());
+    let editor = env::var("EDITOR").unwrap_or_else(|_| DEFAULT_EDITOR.into());
 
     let mut split = editor.split_whitespace();
     let editor = split.next().unwrap();
