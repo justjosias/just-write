@@ -19,7 +19,7 @@ pub fn search_files(paths: &[PathBuf], query: &str) -> Vec<PathBuf> {
     let mut new_paths = Vec::new();
     for path in paths {
         if let Ok(contents) = read_to_string(&path) {
-            if contents.contains(query) {
+            if contents.to_lowercase().contains(&query.to_lowercase()) {
                 new_paths.push(path.clone());
             }
         }
@@ -42,7 +42,7 @@ pub fn tags(paths: &[PathBuf]) -> Tags {
                     if in_tag {
                         if c == ' ' || c.is_ascii_punctuation() || c == '\n' {
                             in_tag = false;
-                            tags.entry(tag.clone()).and_modify(|t| *t += 1).or_insert(1);
+                            tags.entry(tag.clone().to_lowercase()).and_modify(|t| *t += 1).or_insert(1);
                             tag.clear();
                         } else {
                             tag.push(c);
