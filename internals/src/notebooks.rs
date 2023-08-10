@@ -9,11 +9,11 @@ use serde_derive::{Deserialize, Serialize};
 use crate::{config, search, time::Timestamp, Error};
 
 #[derive(Default, Deserialize, Serialize)]
-struct Config {
-    name: String,
-    description: String,
-    post_path: String,
-    metadata: bool,
+pub struct Config {
+    pub name: String,
+    pub description: String,
+    pub post_path: String,
+    pub metadata: bool,
 }
 
 #[derive(Default)]
@@ -69,7 +69,7 @@ impl Notebook {
         Ok(Notebook::load(id).unwrap())
     }
 
-    fn read_config(&self) -> Result<Config, Error> {
+    pub fn read_config(&self) -> Result<Config, Error> {
         let config_str = fs::read_to_string(self.path.join("notebook.toml"))?;
         Ok(toml::from_str(&config_str)?)
     }

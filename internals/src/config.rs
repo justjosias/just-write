@@ -17,7 +17,7 @@ use serde_derive::{Deserialize, Serialize};
 
 use crate::Error;
 
-#[derive(Debug, Default, Deserialize, Serialize, PartialEq ,Eq)]
+#[derive(Debug, Default, Deserialize, Serialize, PartialEq, Eq)]
 pub struct Config {
     /// The directory where notebooks are stored
     pub root: PathBuf,

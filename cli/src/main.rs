@@ -70,7 +70,15 @@ A micro-journaling tool
             }
 
             if let Some(notebook) = notebook {
-                match get_text() {
+                let config = notebook.read_config().unwrap();
+                let post_path = std::path::PathBuf::from(config.post_path);
+                let ext = match post_path
+                    .extension() {
+                        Some(ext) => ".".to_string() + ext.to_str().unwrap(),
+                        None => "".to_owned(),
+                    };
+
+                match get_text(&ext) {
                     Ok(text) => {
                         if !text.is_empty() {
                             match notebook.post(&text) {
@@ -85,7 +93,7 @@ A micro-journaling tool
                         } else {
                             eprintln!("Post empty; not saved.");
                         }
-                    },
+                    }
                     Err(p) => {
                         eprintln!("Failed to read temporary file: {}", p.display());
                         return ExitCode::FAILURE;
@@ -200,9 +208,9 @@ fn open_error(id: &str) {
     );
 }
 
-fn get_text() -> Result<String, path::PathBuf> {
+fn get_text(ext: &str) -> Result<String, path::PathBuf> {
     let mut path = env::temp_dir();
-    path.push("jw-".to_owned() + &random_string(10));
+    path.push("jw-".to_owned() + &random_string(10) + ext);
     if let Ok(s) = open_editor(&path) {
         _ = fs::remove_file(&path);
         Ok(s)
