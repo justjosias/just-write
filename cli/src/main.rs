@@ -38,6 +38,7 @@ A micro-journaling tool
   search  NOTEBOOK  QUERY  list posts containing query
   tags    NOTEBOOK         list hashtags in a notebook
   edit    NOTEBOOK  [NUM]  edit last NUM post
+  path    NOTEBOOK         returns the path of the notebook
   list                     list existing notebooks"#
             );
         }
@@ -155,6 +156,17 @@ A micro-journaling tool
             } else {
                 open_error(&args[1]);
                 return ExitCode::FAILURE;
+            }
+        }
+
+        "path" => {
+            if args.len() < 2 {
+                eprintln!("Usage: jw path NOTEBOOK");
+                return ExitCode::FAILURE;
+            }
+
+            if let Some(notebook) = notebook {
+                println!("{}", notebook.path.display());
             }
         }
 
